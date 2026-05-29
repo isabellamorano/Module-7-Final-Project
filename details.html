@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FrameFinder | Movie Details</title>
+    <script src="https://kit.fontawesome.com/d516bcd195.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav-bar" aria-label="Main navigation">
+        <a class="logo" href="index.html" aria-label="FrameFinder home">
+          <span class="logo-mark">F</span>
+          <span>FrameFinder</span>
+        </a>
+
+        <button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-controls="navLinks"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="nav-links" id="navLinks">
+          <a href="index.html">Home</a>
+          <a href="movies.html">Movies</a>
+          <a href="movies.html#about">About</a>
+          <a href="#footer">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="root"></main>
+
+    <footer class="site-footer" id="footer">
+      <div>
+        <a class="logo footer-logo" href="index.html" aria-label="FrameFinder home">
+          <span class="logo-mark">F</span>
+          <span>FrameFinder</span>
+        </a>
+        <p>Movie discovery UI built for a frontend developer take-home project.</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="https://omdbapi.com/" target="_blank" rel="noreferrer">OMDb API</a>
+        <a href="movies.html">Movie Search</a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script>
+      const DETAILS_OMDB_API_KEY = "5dd2ddb1";
+      const DETAILS_OMDB_API_URL = "https://www.omdbapi.com/";
+      const createElement = React.createElement;
+
+      function MovieDetailsPage() {
+        const [movie, setMovie] = React.useState(null);
+        const [isLoading, setIsLoading] = React.useState(true);
+        const [error, setError] = React.useState("");
+
+        React.useEffect(() => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const movieId = urlParams.get("id");
+
+          if (!movieId) {
+            setError("No movie was selected.");
+            setIsLoading(false);
+            return;
+          }
+
+          async function loadMovieDetails() {
+            try {
+              const response = await fetch(
+                `${DETAILS_OMDB_API_URL}?apikey=${DETAILS_OMDB_API_KEY}&i=${movieId}&plot=full`
+              );
+              const data = await response.json();
+
+              if (data.Response === "False") {
+                setError(data.Error || "Movie details could not be found.");
+                setIsLoading(false);
+                return;
+              }
+
+              setMovie(data);
+            } catch (error) {
+              setError("Unable to load movie details. Please try again.");
+            } finally {
+              setIsLoading(false);
+            }
+          }
+
+          loadMovieDetails();
+        }, []);
+
+        if (isLoading) {
+          return createElement(
+            "section",
+            { className: "details-state" },
+            createElement("h1", null, "Loading movie details"),
+            createElement("p", null, "Fetching full movie information from OMDb.")
+          );
+        }
+
+        if (error) {
+          return createElement(
+            "section",
+            { className: "details-state" },
+            createElement("h1", null, "Movie not found"),
+            createElement("p", null, error),
+            createElement("a", { className: "primary-action", href: "movies.html" }, "Back to movies")
+          );
+        }
+
+        const poster =
+          movie.Poster && movie.Poster !== "N/A"
+            ? movie.Poster
+            : "https://placehold.co/600x750/263238/ffffff?text=No+Poster";
+
+        return createElement(
+          "section",
+          { className: "details-page" },
+          createElement("a", { className: "back-link", href: "movies.html#movies" }, "Back to search results"),
+          createElement(
+            "div",
+            { className: "details-layout" },
+            createElement(
+              "div",
+              { className: "details-poster" },
+              createElement("img", { src: poster, alt: `${movie.Title} poster` })
+            ),
+            createElement(
+              "div",
+              { className: "details-content" },
+              createElement("p", { className: "eyebrow" }, `${movie.Type || "Movie"} details`),
+              createElement("h1", null, movie.Title),
+              createElement(
+                "div",
+                { className: "details-meta" },
+                createElement("span", null, movie.Year),
+                createElement("span", null, movie.Rated),
+                createElement("span", null, movie.Runtime)
+              ),
+              createElement("p", { className: "details-plot" }, movie.Plot),
+              createElement(
+                "dl",
+                { className: "details-list" },
+                createDetailItem("Genre", movie.Genre),
+                createDetailItem("Director", movie.Director),
+                createDetailItem("Actors", movie.Actors),
+                createDetailItem("IMDb Rating", movie.imdbRating),
+                createDetailItem("Box Office", movie.BoxOffice),
+                createDetailItem("Awards", movie.Awards)
+              )
+            )
+          )
+        );
+      }
+
+      function createDetailItem(label, value) {
+        return createElement(
+          "div",
+          { key: label },
+          createElement("dt", null, label),
+          createElement("dd", null, value && value !== "N/A" ? value : "Not available")
+        );
+      }
+
+      ReactDOM.createRoot(document.querySelector("#root")).render(
+        createElement(MovieDetailsPage)
+      );
+    </script>
+  </body>
+</html>

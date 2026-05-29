@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FrameFinder | Movie Discovery</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/d516bcd195.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav-bar" aria-label="Main navigation">
+        <a class="logo" href="index.html" aria-label="FrameFinder home">
+          <span class="logo-mark">F</span>
+          <span>FrameFinder</span>
+        </a>
+
+        <button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-controls="navLinks"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="nav-links" id="navLinks">
+          <a href="index.html">Home</a>
+          <a href="#movies">Movies</a>
+          <a href="#about">About</a>
+          <a href="#footer">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="movie-site-hero" aria-labelledby="app-title">
+        <div class="movie-site-hero-content">
+          <p class="eyebrow">Curated cinema picks</p>
+          <h1 id="app-title">Find your next movie night favorite.</h1>
+          <p>
+            Browse movie results from the OMDb API, then sort the collection by
+            title or release year.
+          </p>
+          <a class="primary-action" href="#movies">Explore movies</a>
+        </div>
+      </section>
+
+      <section class="toolbar-section" id="movies" aria-labelledby="movies-title">
+        <div class="section-heading">
+          <p class="eyebrow">Watchlist</p>
+          <h2 id="movies-title">Search results</h2>
+        </div>
+
+        <div class="controls" aria-label="Movie controls">
+          <form class="search-form" id="searchForm">
+            <label class="field">
+              <span>Search</span>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Search by movie title"
+                autocomplete="off"
+              />
+            </label>
+            <button class="search-button" type="submit">Search</button>
+          </form>
+
+          <label class="field">
+            <span>Sort by</span>
+            <select id="sortSelect">
+              <option value="az">Alphabetical A to Z</option>
+              <option value="za">Alphabetical Z to A</option>
+              <option value="newest">Newest to oldest</option>
+              <option value="oldest">Oldest to newest</option>
+            </select>
+          </label>
+        </div>
+
+        <p class="results-line" id="resultsLine" aria-live="polite"></p>
+        <div class="movie-grid" id="movieGrid"></div>
+      </section>
+
+      <section class="about-section" id="about" aria-labelledby="about-title">
+        <div>
+          <p class="eyebrow">Project brief</p>
+          <h2 id="about-title">Built like a small frontend take-home.</h2>
+        </div>
+        <p>
+          This project uses semantic HTML, responsive CSS, JavaScript rendering,
+          API data, search state, a burger menu, and a working sorting filter.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="footer">
+      <div>
+        <a class="logo footer-logo" href="index.html" aria-label="FrameFinder home">
+          <span class="logo-mark">F</span>
+          <span>FrameFinder</span>
+        </a>
+        <p>Movie discovery UI built for a frontend developer take-home project.</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="https://omdbapi.com/" target="_blank" rel="noreferrer">OMDb API</a>
+        <a href="index.html">Home</a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
